@@ -1,9 +1,13 @@
 package c2j.api.dataStructures;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import c2j.api.utils.EncodingUtils;
 
 public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 
+	private String pictureClause;
 	protected byte[] value;
 	protected int size;
 
@@ -12,7 +16,7 @@ public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 	}
 
 	public AlphaNumericCobolRecordImpl(String picture, String value) {
-		this.size = 20;
+		parsePicture(picture);
 		this.value = new byte[this.size];
 		if (value != null) {
 			byte[] bytes = EncodingUtils.decodeString(value);
@@ -20,6 +24,21 @@ public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 		}
 	}
 
+	private void parsePicture(String picture) {
+		this.pictureClause = picture;
+		if (Pattern.matches("X+", picture)) {
+			this.size = picture.length();
+		} else {
+			Pattern p = Pattern.compile("X[(]([0-9]+)[)]");
+			Matcher m = p.matcher(picture);
+			if (m.find()) {
+				this.size = Integer.parseInt(m.group(1));
+			} else {
+				throw new RuntimeException("Invalid Picture Clause " + pictureClause);
+			}
+		}
+	}
+	
 	public int getSize() {
 		return size;
 	}
@@ -33,7 +52,7 @@ public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 	}
 
 	public void write(byte[] src, int offset) {
-		System.arraycopy(src, 0, value, offset, src.length);
+		System.arraycopy(src, 0, value, offset, Math.min(this.size, src.length));
 	}
 
 	public ReferenceModification getRefMod(int from) {

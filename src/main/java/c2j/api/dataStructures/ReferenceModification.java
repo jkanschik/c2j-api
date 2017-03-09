@@ -23,6 +23,10 @@ public class ReferenceModification implements AlphaNumericCobolRecord {
 		parent.write(src, offset);
 	}
 
+	public void write(byte[] src, int position) {
+		parent.write(src, offset + position);
+	}
+
 	public byte[] getValue() {
 		return Arrays.copyOfRange(parent.getValue(), offset, offset + size);
 	}

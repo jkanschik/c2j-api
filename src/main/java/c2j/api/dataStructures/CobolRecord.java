@@ -7,5 +7,6 @@ public interface CobolRecord {
 	public byte[] getValue();
 
 	public void write(byte[] src);
+	public void write(byte[] src, int offset);
 
 }
