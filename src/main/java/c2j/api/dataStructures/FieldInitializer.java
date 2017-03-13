@@ -1,5 +1,6 @@
 package c2j.api.dataStructures;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
@@ -12,14 +13,22 @@ public class FieldInitializer {
       Class klazz = instance.getClass();
       for (Field field : klazz.getDeclaredFields()) {
         field.setAccessible(true);
-        for (DisplayRecord dr : field.getAnnotationsByType(DisplayRecord.class)) {
-          CobolRecord child = new AlphaNumericCobolRecordImpl(dr.pic(), dr.value());
-          field.set(instance, child);
-        }
-        for (Group group : field.getAnnotationsByType(Group.class)) {
-          GroupImpl value = (GroupImpl) field.getType().newInstance();
-          field.set(instance, value);
-          value.init();
+        for (Annotation annotation : field.getAnnotations()) {
+        	if (annotation.annotationType() == NumericRecord.class) {
+        		NumericRecord nr = (NumericRecord) annotation;
+                CobolRecord child = new NumericCobolRecord(nr.pic(), nr.value());
+                field.set(instance, child);
+        	}
+        	if (annotation.annotationType() == DisplayRecord.class) {
+        		DisplayRecord dr = (DisplayRecord) annotation;
+                CobolRecord child = new AlphaNumericCobolRecordImpl(dr.pic(), dr.value());
+                field.set(instance, child);
+        	}
+        	if (annotation.annotationType() == Group.class) {
+                GroupImpl value = (GroupImpl) field.getType().newInstance();
+                field.set(instance, value);
+                value.init();
+        	}        	
         }
       }
     } catch (IllegalArgumentException | IllegalAccessException |InstantiationException e) {

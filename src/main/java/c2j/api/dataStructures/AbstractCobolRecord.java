@@ -2,6 +2,10 @@ package c2j.api.dataStructures;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
+
+import c2j.api.utils.EncodingUtils;
+
 public abstract class AbstractCobolRecord implements CobolRecord {
 
 	protected byte[] value;
@@ -47,6 +51,14 @@ public abstract class AbstractCobolRecord implements CobolRecord {
 	public void setParentReference(GroupImpl parent, int parentOffset) {
 		this.parent = parent;
 		this.parentOffset = parentOffset;
+	}
+
+	public void set(String str) {
+		if (str == null) {
+			str = StringUtils.repeat(" ", getSize());
+		}
+		byte[] bytes = EncodingUtils.decodeString(str);
+		write(bytes);
 	}
 
 }

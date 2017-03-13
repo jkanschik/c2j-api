@@ -1,5 +1,6 @@
 package c2j.api.dataStructures;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 public class GroupImpl extends AbstractCobolRecord implements CobolRecord {
@@ -18,19 +19,29 @@ public class GroupImpl extends AbstractCobolRecord implements CobolRecord {
 		Class klazz = this.getClass();
 		
 		for (Field field : klazz.getDeclaredFields()) {
-			if (field.isAnnotationPresent(DisplayRecord.class)) {
-				DisplayRecord dr = field.getAnnotationsByType(DisplayRecord.class)[0];
-				AbstractCobolRecord child = new AlphaNumericCobolRecordImpl(dr.pic());
-				child.setParentReference(this, size);
-				field.set(this, child);
-				size += child.getSize();
-			}
-			if (field.isAnnotationPresent(Group.class)) {
-				GroupImpl child = (GroupImpl) field.getType().newInstance();
-				child.setParentReference(this, size);
-				child.init();
-		        field.set(this, child);
-				size += child.getSize();
+			field.setAccessible(true);
+			for (Annotation annotation : field.getAnnotations()) {
+	        	if (annotation.annotationType() == NumericRecord.class) {
+	        		NumericRecord nr = (NumericRecord) annotation;
+	        		NumericCobolRecord child = new NumericCobolRecord(nr.pic());
+					child.setParentReference(this, size);
+					field.set(this, child);
+					size += child.getSize();
+	        	}
+	        	if (annotation.annotationType() == DisplayRecord.class) {
+					DisplayRecord dr = (DisplayRecord) annotation;
+					AbstractCobolRecord child = new AlphaNumericCobolRecordImpl(dr.pic());
+					child.setParentReference(this, size);
+					field.set(this, child);
+					size += child.getSize();
+	        	}
+	        	if (annotation.annotationType() == Group.class) {
+					GroupImpl child = (GroupImpl) field.getType().newInstance();
+					child.init();
+					child.setParentReference(this, size);
+			        field.set(this, child);
+					size += child.getSize();
+	        	}
 			}
 		}
 	}
@@ -39,12 +50,18 @@ public class GroupImpl extends AbstractCobolRecord implements CobolRecord {
 		Class klazz = this.getClass();
 
 		for (Field field : klazz.getDeclaredFields()) {
-			if (field.isAnnotationPresent(DisplayRecord.class)) {
-				DisplayRecord dr = field.getAnnotationsByType(DisplayRecord.class)[0];
-				((AlphaNumericCobolRecordImpl) field.get(this)).setValue(dr.value());
-			}
-			if (field.isAnnotationPresent(Group.class)) {
-				((GroupImpl) field.get(this)).initChildValues();
+			for (Annotation annotation : field.getAnnotations()) {
+	        	if (annotation.annotationType() == NumericRecord.class) {
+	        		NumericRecord nr = (NumericRecord) annotation;
+					((NumericCobolRecord) field.get(this)).set(nr.value());
+	        	}
+	        	if (annotation.annotationType() == DisplayRecord.class) {
+					DisplayRecord dr = (DisplayRecord) annotation;
+					((AlphaNumericCobolRecordImpl) field.get(this)).set(dr.value());
+	        	}
+	        	if (annotation.annotationType() == Group.class) {
+					((GroupImpl) field.get(this)).initChildValues();
+	        	}
 			}
 		}
 	}

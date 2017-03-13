@@ -1,6 +1,7 @@
 package c2j.api;
 
 import c2j.api.dataStructures.AlphaNumericCobolRecord;
+import c2j.api.dataStructures.CobolRecord;
 import c2j.api.dataStructures.FieldInitializer;
 
 public class CobolProgram {
@@ -15,11 +16,11 @@ public class CobolProgram {
 		moveStatements.move(from,  to);
 	}
 
-	public void move(String from, AlphaNumericCobolRecord to) {
+	public void move(String from, CobolRecord to) {
 		moveStatements.move(from,  to);
 	}
 
-	public void display(AlphaNumericCobolRecord record) {
+	public void display(CobolRecord record) {
 		System.out.println(record.toString());
 	}
 

@@ -2,6 +2,10 @@ package c2j.api.dataStructures;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
+
+import c2j.api.utils.EncodingUtils;
+
 public class ReferenceModification implements AlphaNumericCobolRecord {
 	private int size;
 	private int offset;
@@ -25,6 +29,14 @@ public class ReferenceModification implements AlphaNumericCobolRecord {
 
 	public void write(byte[] src, int position) {
 		parent.write(src, offset + position);
+	}
+
+	public void set(String str) {
+		if (str == null) {
+			str = StringUtils.repeat(" ", getSize());
+		}
+		byte[] bytes = EncodingUtils.decodeString(str);
+		write(bytes);
 	}
 
 	public byte[] getValue() {

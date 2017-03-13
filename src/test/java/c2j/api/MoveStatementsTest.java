@@ -14,14 +14,14 @@ public class MoveStatementsTest {
 	
 	@Test
 	public void testStringToDisplay() {
-		AlphaNumericCobolRecord record = new AlphaNumericCobolRecordImpl("X(5)", "     ");
+		AlphaNumericCobolRecord record = new AlphaNumericCobolRecordImpl("X(5)", "");
 		moveStatements.move("Hello", record);
 		assertThat(record.toString(), is("Hello"));
 	}
 
 	@Test
 	public void testStringTooLong() {
-		AlphaNumericCobolRecord record = new AlphaNumericCobolRecordImpl("X");
+		AlphaNumericCobolRecord record = new AlphaNumericCobolRecordImpl("X", "");
 		moveStatements.move("Hello", record);
 		assertThat(record.toString(), is("H"));
 	}

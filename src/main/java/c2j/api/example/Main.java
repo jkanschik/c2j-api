@@ -29,11 +29,13 @@ public class Main extends CobolProgram {
 		display(someGroup.field1);
 		display(someGroup.field2);
 		display(someGroup.field3);
+		display(someGroup.field3N);
 
-		move("1234567", someGroup.field1);
+		move("1234567", someGroup);
 		display(someGroup.field1);
 		display(someGroup.field2);
 		display(someGroup.field3);
+		display(someGroup.field3N);
 
 		move("Hallo Welt", feld1);
 		display(feld1);

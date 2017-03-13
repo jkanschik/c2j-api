@@ -11,23 +11,26 @@ public class AlphaNumericCobolRecordImpl extends AbstractCobolRecord implements 
 
 	private String pictureClause;
 
-	public AlphaNumericCobolRecordImpl(String picture) {
+	protected AlphaNumericCobolRecordImpl(String picture) {
 		parsePicture(picture);
 	}
 
-	@Deprecated
 	public AlphaNumericCobolRecordImpl(String picture, String str) {
 		parsePicture(picture);
 		this.value = new byte[this.size];
-		this.setValue(str);
+		this.set(str);
 	}
 
-	public void setValue(String str) {
+	public void set(String str) {
 		if (str == null) {
 			str = StringUtils.repeat(" ", getSize());
 		}
 		byte[] bytes = EncodingUtils.decodeString(str);
 		write(bytes);
+	}
+	
+	public String get() {
+		return toString();
 	}
 
 	private void parsePicture(String picture) {
