@@ -11,5 +11,5 @@ public @interface NumericRecord {
 
 	  String pic();
 	  String value() default "0";
-	  String redefines();
+	  String redefines() default "";
 }
