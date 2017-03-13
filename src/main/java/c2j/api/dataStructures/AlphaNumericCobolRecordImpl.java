@@ -1,26 +1,51 @@
 package c2j.api.dataStructures;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import c2j.api.utils.EncodingUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 
 	private String pictureClause;
-	protected byte[] value;
 	protected int size;
 
+	private GroupImpl parent;
+	private int parentOffset;
+	private byte[] value;
+
 	public AlphaNumericCobolRecordImpl(String picture) {
-		this(picture, null);
+		this(picture, (String) null);
 	}
 
-	public AlphaNumericCobolRecordImpl(String picture, String value) {
+	public AlphaNumericCobolRecordImpl(String picture, String str) {
 		parsePicture(picture);
 		this.value = new byte[this.size];
-		if (value != null) {
-			byte[] bytes = EncodingUtils.decodeString(value);
+		this.setValue(str);
+	}
+
+	public AlphaNumericCobolRecordImpl(String picture, GroupImpl parent, int parentOffset) {
+		this(picture, null, parent, parentOffset);
+	}
+
+	public AlphaNumericCobolRecordImpl(String picture, String value, GroupImpl parent, int parentOffset) {
+		parsePicture(picture);
+		this.value = null;
+		this.parent = parent;
+		this.parentOffset = parentOffset;
+	}
+
+	public void setValue(String str) {
+		if (str == null) {
+			str = StringUtils.repeat(" ", size);
+		}
+		byte[] bytes = EncodingUtils.decodeString(str);
+		if (this.value != null) {
 			System.arraycopy(bytes, 0, this.value, 0, bytes.length);
+		} else {
+			System.arraycopy(bytes, 0, this.parent.getValue(), parentOffset, bytes.length);
 		}
 	}
 
@@ -44,7 +69,11 @@ public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 	}
 
 	public byte[] getValue() {
-		return value;
+		if (this.value == null) {
+			return Arrays.copyOfRange(this.parent.getValue(), this.parentOffset, this.size);
+		} else {
+			return Arrays.copyOf(this.value, this.size);
+		}
 	}
 
 	public void write(byte[] src) {
@@ -52,7 +81,11 @@ public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 	}
 
 	public void write(byte[] src, int offset) {
-		System.arraycopy(src, 0, value, offset, Math.min(this.size, src.length));
+		if (this.value == null) {
+			// TODO
+		} else {
+			System.arraycopy(src, 0, value, offset, Math.min(this.size, src.length));
+		}
 	}
 
 	public ReferenceModification getRefMod(int from) {
@@ -65,7 +98,7 @@ public class AlphaNumericCobolRecordImpl implements AlphaNumericCobolRecord {
 
 	@Override
 	public String toString() {
-		return EncodingUtils.encodeString(this.value);
+		return EncodingUtils.encodeString(getValue());
 	}
 
 }

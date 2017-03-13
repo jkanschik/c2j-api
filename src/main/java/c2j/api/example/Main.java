@@ -1,21 +1,34 @@
-package c2j.api;
+package c2j.api.example;
 
-import c2j.api.dataStructures.AlphaNumericCobolRecordImpl;
+import c2j.api.CobolProgram;
+import c2j.api.dataStructures.AlphaNumericCobolRecord;
+import c2j.api.dataStructures.DisplayRecord;
+import c2j.api.dataStructures.Group;
 
 /**
  * Created by kanschje on 09.03.2017.
  */
 public class Main extends CobolProgram {
 
+	@DisplayRecord(pic = "X(10)", value = "INITIAL")
+	private AlphaNumericCobolRecord feld1;
+
+	@DisplayRecord(pic = "X(10)")
+	private AlphaNumericCobolRecord feld2;
+
+	@Group
+	private ExampleGroup someGroup;
+
 	public static void main(String... args) {
 		new Main().execute();
 	}
+
 	public void execute() {
 
-		AlphaNumericCobolRecordImpl feld1 = new AlphaNumericCobolRecordImpl("X(10)", "INITIAL");
-		AlphaNumericCobolRecordImpl feld2 = new AlphaNumericCobolRecordImpl("X(10)");
-
 		display(feld1);
+		display(someGroup.field1);
+		display(someGroup.field2);
+		display(someGroup.field3);
 
 		move("Hallo Welt", feld1);
 		display(feld1);

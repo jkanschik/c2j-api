@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Group {
+public @interface DisplayRecord {
 
+  String pic();
+  String value() default "";
 }

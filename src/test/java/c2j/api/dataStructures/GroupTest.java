@@ -9,10 +9,15 @@ import c2j.api.utils.EncodingUtils;
 
 public class GroupTest {
 	
-	public class GroupA extends Group {
-		public AlphaNumericCobolRecord field1 = new AlphaNumericCobolRecordImpl("X", "A");
-		public AlphaNumericCobolRecord field2 = new AlphaNumericCobolRecordImpl("X(5)", "BBBBB");
-		public AlphaNumericCobolRecord field3 = new AlphaNumericCobolRecordImpl("X", "C");
+	public class GroupA extends GroupImpl {
+		@DisplayRecord(pic = "X", value = "A")
+		public AlphaNumericCobolRecord field1;
+
+		@DisplayRecord(pic = "X(5)", value = "BBBBB")
+		public AlphaNumericCobolRecord field2;
+
+		@DisplayRecord(pic = "X", value = "C")
+		public AlphaNumericCobolRecord field3;
 
 		public GroupA() {
 			init();

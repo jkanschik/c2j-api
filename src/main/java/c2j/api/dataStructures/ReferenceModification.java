@@ -34,4 +34,14 @@ public class ReferenceModification implements AlphaNumericCobolRecord {
 	public int getSize() {
 		return size;
 	}
+
+	@Override
+	public ReferenceModification getRefMod(int from) {
+		throw new UnsupportedOperationException("Recursive reference modifications are not supported!");
+	}
+
+	@Override
+	public ReferenceModification getRefMod(int from, int size) {
+		throw new UnsupportedOperationException("Recursive reference modifications are not supported!");
+	}
 }
