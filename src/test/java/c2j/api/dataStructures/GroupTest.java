@@ -1,7 +1,7 @@
 package c2j.api.dataStructures;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 

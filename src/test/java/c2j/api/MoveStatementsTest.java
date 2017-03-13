@@ -1,8 +1,8 @@
 package c2j.api;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-import static org.hamcrest.core.Is.is;
 import org.junit.Test;
 
 import c2j.api.dataStructures.AlphaNumericCobolRecord;
