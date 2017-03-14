@@ -26,14 +26,7 @@ public class NumericCobolRecord extends AbstractCobolRecord {
 	}
 	
 	public BigDecimal get() {
-		byte[] bytes = getValue();
-		StringBuffer sb = new StringBuffer(this.size);
-		for (byte b : bytes) {
-			sb.append(b & 0x0F);
-		}
-		BigDecimal result = new BigDecimal(sb.toString());
-		result.setScale(scale);
-		return result;
+		return NumericValueConverter.fromPIC9(getValue(), scale);
 	}
 	
 	public void set(String value) {
