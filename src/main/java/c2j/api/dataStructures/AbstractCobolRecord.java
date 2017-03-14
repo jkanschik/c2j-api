@@ -8,9 +8,13 @@ import c2j.api.utils.EncodingUtils;
 
 public abstract class AbstractCobolRecord implements CobolRecord {
 
+	// for top level fields:
 	protected byte[] value;
+	// for members of groups:
 	private GroupImpl parent;
 	private int parentOffset;
+	// for redefinitions:
+	private CobolRecord redefinitionReference;
 	
 	protected int size;
 	
@@ -25,8 +29,10 @@ public abstract class AbstractCobolRecord implements CobolRecord {
 	
 	@Override
 	public byte[] getValue() {
-		if (value == null) {
+		if (parent != null) {
 			return Arrays.copyOfRange(parent.getValue(), parentOffset, parentOffset + size);
+		} else if (redefinitionReference != null) {
+			return Arrays.copyOf(redefinitionReference.getValue(), redefinitionReference.getSize());
 		} else {
 			return Arrays.copyOf(value, size);
 		}
@@ -41,8 +47,10 @@ public abstract class AbstractCobolRecord implements CobolRecord {
 	}
 	
 	protected void write(byte[] src, int offset, int length) {
-		if (value == null) {
+		if (parent != null) {
 			parent.write(src, parentOffset + offset, length);
+		} else if (redefinitionReference != null) {
+			redefinitionReference.write(src, 0);
 		} else {
 			System.arraycopy(src, 0, value, offset, Math.min(length, Math.min(size - offset, src.length)));
 		}
@@ -51,6 +59,10 @@ public abstract class AbstractCobolRecord implements CobolRecord {
 	public void setParentReference(GroupImpl parent, int parentOffset) {
 		this.parent = parent;
 		this.parentOffset = parentOffset;
+	}
+
+	public void setRedefinitionReference(CobolRecord redefinitionReference) {
+		this.redefinitionReference = redefinitionReference;
 	}
 
 	public void set(String str) {

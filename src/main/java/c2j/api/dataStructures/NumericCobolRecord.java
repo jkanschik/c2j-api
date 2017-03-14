@@ -15,10 +15,6 @@ public class NumericCobolRecord extends AbstractCobolRecord {
 		parsePicture(picture);
 	}
 
-	public NumericCobolRecord(String picture, CobolRecord redefineReference) {
-		parsePicture(picture);
-	}
-
 	public NumericCobolRecord(String picture, String value) {
 		parsePicture(picture);
 		this.value = new byte[this.size];
